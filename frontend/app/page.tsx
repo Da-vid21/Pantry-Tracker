@@ -27,7 +27,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     setFilteredItems(
       items.filter((item) =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.category.toLowerCase().includes(searchQuery.toLowerCase())
       )
     );
   }, [searchQuery, items]);

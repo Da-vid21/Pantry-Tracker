@@ -10,12 +10,14 @@ interface PantryItemProps {
 
 const PantryItem: React.FC<PantryItemProps> = ({ name, status, color }) => {
     return (
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 2, backgroundColor: '#333', borderRadius: 1, marginBottom: 1 }}>
-            <Typography variant="h6" color="white">
-                {name}
-            </Typography>
-            <Chip label={status} sx={{ backgroundColor: color, color: 'white' }} />
-        </Box>
+        <>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 2, backgroundColor: '#333', borderRadius: 1, marginBottom: 1 }}>
+                <Typography variant="h6" color="white">
+                    {name}
+                </Typography>
+                <Chip label={status} sx={{ backgroundColor: color, color: 'white' }} />
+            </Box>
+        </>
     );
 };
 

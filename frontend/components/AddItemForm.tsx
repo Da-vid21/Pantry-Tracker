@@ -27,8 +27,6 @@ const AddItemForm = () => {
             id: uuidv4(),
             name,
             category,
-            quantity: Number(quantity),
-            units,
             expiryDate: expiryDate.getTime(), // Convert to timestamp
             notes,
         };
@@ -88,43 +86,6 @@ const AddItemForm = () => {
                         <MenuItem value="Grains">Grains</MenuItem>
                         <MenuItem value="Spices">Spices</MenuItem>
                         <MenuItem value="Other">Other</MenuItem>
-                    </Select>
-                </FormControl>
-                <TextField
-                    InputLabelProps={{ className: styles.label }}
-                    InputProps={{
-                        className: styles.input,
-                        classes: {
-                            root: styles.inputFocus,
-                            notchedOutline: styles.inputOutlined,
-                        },
-                    }}
-                    className={`${styles.text} ${styles.form}`}
-                    label="Quantity"
-                    variant="outlined"
-                    fullWidth
-                    required
-                    sx={{ marginBottom: 2 }}
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                />
-                <FormControl fullWidth sx={{ marginBottom: 2 }} className={styles.form}>
-                    <InputLabel className={styles.label}>Units</InputLabel>
-                    <Select
-                        className={`${styles.input} ${styles.inputFocus}`}
-                        value={units}
-                        defaultValue='lbs'
-                        onChange={(e) => setUnits(e.target.value)}
-                        required
-                    >
-                        <MenuItem value="pcs">pcs</MenuItem>
-                        <MenuItem value="oz">oz</MenuItem>
-                        <MenuItem value="lbs">lbs</MenuItem>
-                        <MenuItem value="gallons">gallons</MenuItem>
-                        <MenuItem value="kg">kg</MenuItem>
-                        <MenuItem value="g">g</MenuItem>
-                        <MenuItem value="ml">ml</MenuItem>
-                        <MenuItem value="L">L</MenuItem>
                     </Select>
                 </FormControl>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
