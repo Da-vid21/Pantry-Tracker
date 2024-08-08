@@ -1,0 +1,31 @@
+.text {
+    color: white !important;
+}
+
+.label {
+    color: white !important;
+}
+
+.input {
+    color: white !important;
+}
+
+.form {
+    border: 1px solid white !important;
+}
+
+.inputOutlined {
+    &:focus fieldset {
+        borderColor: white !important;
+    }
+}
+
+.inputFocus {
+    &:hover fieldset {
+        borderColor: white !important;
+    }
+
+    &:focus fieldset {
+        borderColor: white !important;
+    }
+}
