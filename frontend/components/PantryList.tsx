@@ -1,28 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PantryItem from './PantryItem';
-import { getPantryItems } from '@/lib/firebaseFunctions';
 import { PantryItem as PantryItemType } from '@/models/PantryItem';
 
-const PantryList = () => {
-    const [items, setItems] = useState<PantryItemType[]>([]);
-    const [loading, setLoading] = useState(true);
+interface PantryListProps {
+    items: PantryItemType[];
+}
 
-    useEffect(() => {
-        const fetchItems = async () => {
-            const pantryItems = await getPantryItems();
-            console.log(pantryItems);
-            setItems(pantryItems);
-            setLoading(false);
-        };
-
-        fetchItems();
-    }, []);
-
+const PantryList: React.FC<PantryListProps> = ({ items }) => {
     const calculateDaysLeft = (expiryDate: number): number => {
         if (!expiryDate) return NaN; // Return NaN if no expiry date
         const today = new Date();
         const timeDiff = expiryDate - today.getTime();
-        console.log(timeDiff);
         return Math.ceil(timeDiff / (1000 * 3600 * 24)); // Convert milliseconds to days
     };
 
@@ -36,10 +24,6 @@ const PantryList = () => {
             return 'green';
         }
     };
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
 
     return (
         <div>

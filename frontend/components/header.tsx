@@ -1,18 +1,14 @@
 // components/Header.tsx
 import React from 'react';
-import { AppBar, Toolbar, Typography, IconButton } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { AppBar, Toolbar, Typography } from '@mui/material';
 
 const Header: React.FC = () => {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} onClick={() => window.location.href = '/'}>
           Pantry Tracker
         </Typography>
-        <IconButton color="inherit">
-          <AddIcon />
-        </IconButton>
       </Toolbar>
     </AppBar>
   );
