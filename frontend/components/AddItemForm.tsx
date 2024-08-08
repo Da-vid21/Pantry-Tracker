@@ -1,45 +1,64 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'; // Updated import for useRouter
 import { Box, TextField, Button, MenuItem, Select, InputLabel, FormControl, Typography } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { addPantryItem } from '../lib/firebaseFunctions';
+import { addPantryItem, updatePantryItem } from '../lib/firebaseFunctions';
 import { PantryItem } from '../models/PantryItem';
 import styles from './AddItemForm.module.css';
 import { v4 as uuidv4 } from 'uuid';
 
-const AddItemForm = () => {
+interface AddItemFormProps {
+    editingItem?: PantryItem | null;
+}
+
+const AddItemForm: React.FC<AddItemFormProps> = ({ editingItem }) => {
     const router = useRouter();
     const [name, setName] = useState('');
     const [category, setCategory] = useState('');
     const [quantity, setQuantity] = useState('');
     const [units, setUnits] = useState('');
-    const [expiryDate, setExpiryDate] = useState<Date>(new Date());
+    const [expiryDate, setExpiryDate] = useState<Date | null>(new Date());
     const [notes, setNotes] = useState('');
+
+    useEffect(() => {
+        if (editingItem) {
+            setName(editingItem.name);
+            setCategory(editingItem.category);
+            setExpiryDate(new Date(editingItem.expiryDate));
+            setNotes(editingItem.notes || '');
+        }
+    }, [editingItem]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const buttonName = (e.nativeEvent as any).submitter.name;
 
         const newItem: PantryItem = {
-            id: uuidv4(),
+            id: editingItem ? editingItem.id : uuidv4(),
             name,
             category,
-            expiryDate: expiryDate.getTime(), // Convert to timestamp
-            notes,
+            expiryDate: expiryDate ? expiryDate.getTime() : new Date().getTime(), // Convert to timestamp
+            notes: notes || '',
+            status: 'status',
+            color: 'color'
         };
 
-        await addPantryItem(newItem);
+        if (editingItem) {
+            await updatePantryItem(newItem.id, newItem);
+        } else {
+            await addPantryItem(newItem);
+        }
 
         if (buttonName === 'addMore') {
-            // Reset form fields
+            // Reset form fields if adding a new item
             setName('');
             setCategory('');
             setQuantity('');
             setUnits('');
-            setExpiryDate(new Date()); // Reset to today
+            setExpiryDate(new Date());
             setNotes('');
         } else if (buttonName === 'done') {
             // Navigate back to the main page
@@ -50,7 +69,7 @@ const AddItemForm = () => {
     return (
         <Box sx={{ padding: 2 }}>
             <Typography variant="h6" color="white" gutterBottom>
-                Add Items
+                {editingItem ? 'Edit Item' : 'Add Items'}
             </Typography>
             <form onSubmit={handleSubmit}>
                 <TextField

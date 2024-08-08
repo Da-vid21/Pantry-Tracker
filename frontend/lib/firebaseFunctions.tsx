@@ -37,3 +37,13 @@ export const deletePantryItem = async (id: string) => {
     const itemRef = ref(database, 'pantry/' + id);
     await remove(itemRef);
 };
+
+export const getPantryItemById = async (id: string) => {
+    const itemRef = ref(database, 'pantry/' + id);
+    const snapshot = await get(itemRef);
+    if (snapshot.exists()) {
+        return snapshot.val() as PantryItem;
+    } else {
+        return null;
+    }
+}

@@ -1,24 +1,26 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Box, Container, Button, TextField } from '@mui/material';
-import AddItemFormNoSSR from '@/components/AddItemFormNoSSR';
-import Header from '@/components/Header';
+import { Box, Container, Button, TextField, CircularProgress } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import Header from '@/components/header';
 import PantryList from '@/components/PantryList';
 import { getPantryItems } from '@/lib/firebaseFunctions';
 import { PantryItem as PantryItemType } from '@/models/PantryItem';
-import styles from './page.module.css'
+import styles from './page.module.css';
 
 const Home: React.FC = () => {
-  const [showForm, setShowForm] = useState(false);
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [items, setItems] = useState<PantryItemType[]>([]);
   const [filteredItems, setFilteredItems] = useState<PantryItemType[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchItems = async () => {
       const pantryItems = await getPantryItems();
       setItems(pantryItems);
       setFilteredItems(pantryItems);
+      setLoading(false);
     };
 
     fetchItems();
@@ -27,23 +29,27 @@ const Home: React.FC = () => {
   useEffect(() => {
     setFilteredItems(
       items.filter((item) =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.category.toLowerCase().includes(searchQuery.toLowerCase())
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
     );
   }, [searchQuery, items]);
 
   const handleAddItemsClick = () => {
-    setShowForm(true);
+    router.push('/addItem');
   };
 
-
+  const handleEditItemClick = (item: PantryItemType) => {
+    router.push(`/addItem?id=${item.id}`);
+  };
 
   return (
     <Box sx={{ backgroundColor: '#000', minHeight: '100vh', color: 'white' }}>
       <Header />
       <Container sx={{ paddingY: 4 }}>
-        {showForm ? (
-          <AddItemFormNoSSR />
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+            <CircularProgress />
+          </Box>
         ) : (
           <>
             <TextField
@@ -55,14 +61,11 @@ const Home: React.FC = () => {
               sx={{ marginBottom: 2 }}
               className={styles.searchBox}
             />
-            <PantryList items={filteredItems} />
+            <PantryList items={filteredItems} onEdit={handleEditItemClick} />
+            <Button variant="contained" color="primary" onClick={handleAddItemsClick}>
+              Add Items
+            </Button>
           </>
-        )}
-        {!showForm && (
-
-          <Button variant="contained" color="primary" onClick={handleAddItemsClick}>
-            Add Items
-          </Button>
         )}
       </Container>
     </Box>
